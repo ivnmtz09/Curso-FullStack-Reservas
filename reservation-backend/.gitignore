@@ -1,10 +1,23 @@
+# Build files
 HELP.md
 target/
+build/
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven
 .mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
+# IDE - STS (Spring Tool Suite)
 .apt_generated
 .classpath
 .factorypath
@@ -14,10 +27,11 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
+*.idc
 
 ### NetBeans ###
 /nbproject/private/
@@ -31,3 +45,17 @@ build/
 
 ### VS Code ###
 .vscode/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+*.log
+
+# Environment variables
+.env
+.env.local
+
+# Database files
+*.db
+*.sqlite
