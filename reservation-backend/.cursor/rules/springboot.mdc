@@ -1,0 +1,135 @@
+---
+description: Spring Boot 4 + Java 25 conventions for reservation-backend
+alwaysApply: true
+---
+
+# Spring Boot — reservation-backend
+
+Stack: **Java 25**, **Spring Boot 4**, **Spring Data JPA**, **PostgreSQL**, **springdoc-openapi**.
+Base package: `com.uniguajira.ijesusmartinez.reservation_backend`.
+
+## Language and naming
+
+- **All** class, interface, enum, record, method, field, and constant names must be in **English**.
+- Use `camelCase` for methods/fields, `PascalCase` for types, `UPPER_SNAKE_CASE` for constants.
+- Package segments stay lowercase (existing base package is fixed).
+- Prefer clear domain names (`Reservation`, `CreateReservationRequest`) over abbreviations.
+
+## Project structure
+
+Place code under `src/main/java/com/uniguajira/ijesusmartinez/reservation_backend/`:
+
+```
+reservation_backend/
+├── ReservationBackendApplication.java
+├── config/              # @Configuration, security, OpenAPI, CORS, beans
+├── controller/          # @RestController — HTTP only, no business logic
+├── dto/
+│   ├── request/         # inbound records (create/update/query)
+│   └── response/        # outbound records
+├── entity/              # @Entity JPA models (persistence layer)
+├── repository/          # Spring Data JPA interfaces
+├── service/             # business logic (@Service)
+│   └── impl/            # optional implementations when interfaces exist
+├── mapper/              # entity ↔ DTO mapping (plain classes or MapStruct later)
+├── exception/           # domain exceptions + @RestControllerAdvice handler
+└── util/                # stateless helpers (use sparingly)
+```
+
+Tests mirror production under `src/test/java/.../reservation_backend/` with the same subpackages.
+
+Resources: `src/main/resources/application.properties` (or `.yml`) for config; never commit secrets.
+
+## Layer responsibilities
+
+| Layer | Responsibility |
+|-------|----------------|
+| **controller** | Map HTTP ↔ DTOs, validate input (`@Valid`), return proper status codes. Delegate to services. |
+| **service** | Transactions, business rules, orchestration. No HTTP types. |
+| **repository** | Persistence queries only. |
+| **entity** | DB mapping; no API exposure. |
+| **dto** | API contracts only; **Java records**. |
+| **exception** | Map domain errors to consistent API error bodies. |
+
+**Do not** expose JPA entities from controllers. Map to response records in the service or mapper.
+
+## DTOs — Java records
+
+- All request/response DTOs are **`public record`** types in `dto.request` / `dto.response`.
+- Compact constructors for validation when needed; use `jakarta.validation` annotations on components.
+- Name requests `*Request`, responses `*Response`; lists as `List<*Response>` or a wrapper record.
+
+```java
+public record CreateReservationRequest(
+    @NotNull LocalDate date,
+    @NotBlank String customerName
+) {}
+```
+
+## Javadoc (required)
+
+Every **public** method and every **public** type must have up-to-date Javadoc:
+
+- Summary sentence ending with a period.
+- `@param` for each parameter, `@return` when not void, `@throws` for declared exceptions.
+- Keep in English; describe behavior and side effects, not obvious syntax.
+
+```java
+/**
+ * Creates a reservation after validating availability.
+ *
+ * @param request the reservation data from the client
+ * @return the created reservation details
+ * @throws ReservationConflictException if the slot is already booked
+ */
+public ReservationResponse createReservation(CreateReservationRequest request) { ... }
+```
+
+## Java 25 practices
+
+- Prefer **constructor injection** with `final` fields; avoid field `@Autowired`.
+- Use **records** for DTOs and immutable value objects; **sealed** types for closed exception or status hierarchies when useful.
+- Use **pattern matching** (`switch`, `instanceof`) for readable branching; avoid deep nested `if` chains.
+- Prefer **explicit types** over `var` in public APIs and fields; `var` is acceptable for obvious locals.
+- Use **text blocks** for multi-line SQL or messages when clearer than concatenation.
+- Streams only when they improve clarity; simple loops are fine.
+- Do not use `Optional` in controller method parameters or JSON fields; use nullable types or records thoughtfully in repositories only.
+
+## Spring Boot conventions
+
+- Annotate: `@RestController` + `@RequestMapping`, `@Service`, `@Repository` (or extend `JpaRepository`).
+- Put `@Transactional` on **service** methods (read-only for queries).
+- Validate with `@Valid` / `@Validated` and `jakarta.validation` constraints on DTO records.
+- Centralize errors in `@RestControllerAdvice` with a consistent error record (e.g. `ErrorResponse`).
+- Document REST APIs with **springdoc** (`@Operation`, `@Tag`, `@Schema` on DTO components).
+- Configuration via `application.properties` / profiles; use typed `@ConfigurationProperties` for groups of settings.
+- Logging: SLF4J (`log.info/debug/error`); never `System.out.println` in production code.
+
+## JPA / persistence
+
+- Entities in `entity/` with clear `@Table` / `@Column` names; use `Instant` or `LocalDateTime` for timestamps.
+- Prefer `Long` surrogate keys with `@GeneratedValue`; avoid exposing internal IDs in URLs when a public UUID is required.
+- Lazy associations by default; avoid N+1 (fetch joins or `@EntityGraph` where needed).
+- Do not call repositories from controllers.
+
+## REST API style
+
+- Resource-oriented URLs (`/api/v1/reservations`), plural nouns.
+- Correct HTTP verbs and status codes: `201` + `Location` on create, `204` on delete without body, `404` / `409` / `400` via exception handler.
+- Version APIs with `/api/v1` prefix.
+
+## Testing
+
+- Slice or integration tests with `@SpringBootTest` / `@DataJpaTest` / `@WebMvcTest` as appropriate.
+- Test names in English: `shouldReturn404WhenReservationNotFound`.
+
+## When adding features
+
+1. Entity + repository (if persisted).
+2. Request/response records + validation.
+3. Service with Javadoc and transactions.
+4. Controller endpoint + OpenAPI annotations.
+5. Exception types and handler mappings.
+6. Tests for service and controller happy/error paths.
+
+Keep changes focused; match existing code style and indentation (tabs in this project).
