@@ -1,5 +1,7 @@
 package com.uniguajira.ijesusmartinez.reservation_backend.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,5 +75,18 @@ public class ReservationService {
         entity.setStatus(ReservationStatus.CANCELLED);
         var saved = reservationRepository.save(entity);
         return reservationMapper.toResponse(saved);
+    }
+
+    /**
+     * Retrieves all reservations.
+     *
+     * @return list of reservation responses
+     */
+    @Transactional(readOnly = true)
+    public List<ReservationResponse> getAllReservations() {
+        return reservationRepository.findAll()
+                .stream()
+                .map(reservationMapper::toResponse)
+                .toList();
     }
 }
