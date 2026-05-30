@@ -30,11 +30,11 @@ Java 25 + Spring Boot 4.0 REST API with PostgreSQL persistence.
 
 ### API Endpoints
 
-| Method | Endpoint                    | Description            |
-|--------|-----------------------------|------------------------|
-| `POST`   | `/api/reservations`         | Create a reservation   |
-| `GET`    | `/api/reservations`         | List all reservations  |
-| `DELETE` | `/api/reservations/{id}`    | Cancel a reservation   |
+| Method   | Endpoint                 | Description           |
+| -------- | ------------------------ | --------------------- |
+| `POST`   | `/api/reservations`      | Create a reservation  |
+| `GET`    | `/api/reservations`      | List all reservations |
+| `DELETE` | `/api/reservations/{id}` | Cancel a reservation  |
 
 ### Layers
 
@@ -66,11 +66,11 @@ Angular 21 single-page application with standalone components, signals, and reac
 
 ### Pages
 
-| Route   | Component                 | Description                    |
-|---------|---------------------------|--------------------------------|
-| `/`       | `HomeComponent`           | Landing page with hero section |
-| `/list`   | `ReservationListComponent`| View & cancel reservations     |
-| `/create` | `ReservationCreateComponent` | New reservation form        |
+| Route     | Component                    | Description                    |
+| --------- | ---------------------------- | ------------------------------ |
+| `/`       | `HomeComponent`              | Landing page with hero section |
+| `/list`   | `ReservationListComponent`   | View & cancel reservations     |
+| `/create` | `ReservationCreateComponent` | New reservation form           |
 
 ### Component Architecture
 
@@ -163,19 +163,19 @@ pnpm test
 
 ### Backend (`application.properties`)
 
-| Property | Description | Default |
-|----------|-------------|---------|
-| `spring.datasource.url` | Database JDBC URL | `jdbc:postgresql://localhost:5432/reservations` |
-| `spring.datasource.username` | Database user | `postgres` |
-| `spring.datasource.password` | Database password | — |
-| `server.port` | Server port | `8081` |
-| `spring.jpa.hibernate.ddl-auto` | Schema generation | `update` |
+| Property                        | Description       | Default                                         |
+| ------------------------------- | ----------------- | ----------------------------------------------- |
+| `spring.datasource.url`         | Database JDBC URL | `jdbc:postgresql://localhost:5432/reservations` |
+| `spring.datasource.username`    | Database user     | `postgres`                                      |
+| `spring.datasource.password`    | Database password | —                                               |
+| `server.port`                   | Server port       | `8081`                                          |
+| `spring.jpa.hibernate.ddl-auto` | Schema generation | `update`                                        |
 
 ### Frontend (`src/environments/`)
 
-| Environment | `baseUrl` |
-|-------------|-----------|
-| Development | `http://localhost:8081/api` |
+| Environment | `baseUrl`                     |
+| ----------- | ----------------------------- |
+| Development | `http://localhost:8081/api`   |
 | Production  | `https://api.example.com/api` |
 
 ---
@@ -229,20 +229,20 @@ http://localhost:8081/swagger-ui.html
 
 ## Built With
 
-| Backend | Frontend |
-|---------|----------|
-| Java 25 | Angular 21 |
-| Spring Boot 4.0 | Angular Signals |
-| Spring Data JPA | Reactive Forms |
-| PostgreSQL | TypeScript 5.9 |
-| SpringDoc OpenAPI | RxJS |
-| Maven | pnpm, Vitest |
+| Backend           | Frontend        |
+| ----------------- | --------------- |
+| Java 25           | Angular 21      |
+| Spring Boot 4.0   | Angular Signals |
+| Spring Data JPA   | Reactive Forms  |
+| PostgreSQL        | TypeScript 5.9  |
+| SpringDoc OpenAPI | RxJS            |
+| Maven             | pnpm, Vitest    |
 
 ---
 
 ## Author
 
-**Ijesús Martínez** — Universidad de La Guajira
+**Ivan Jesús Martínez Molina** — Universidad de La Guajira
 
 ---
 
